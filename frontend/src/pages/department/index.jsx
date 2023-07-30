@@ -66,7 +66,6 @@ const Departments = () => {
   departments.map((e, i) => {
     dataSource.push({
       ...e,
-      ParentName: e.Parent ? e.Parent.Name : "",
       key: i + 1,
     });
   });

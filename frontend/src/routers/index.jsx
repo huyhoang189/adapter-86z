@@ -6,6 +6,7 @@ import Login from "../pages/auth/login";
 import Malwares from "../pages/malware";
 import Category from "../pages/category";
 import Variants from "../pages/variant";
+import ReportToday from "../pages/reportToday";
 export const router = createBrowserRouter([
   {
     path: "login",
@@ -29,12 +30,16 @@ export const router = createBrowserRouter([
         element: <Malwares />,
       },
       {
-        path: "malwares/:id", // Remove the leading "/"
+        path: "malwares/:id",
         element: <Variants />,
       },
       {
         path: "category",
         element: <Category />,
+      },
+      {
+        path: "today",
+        element: <ReportToday />,
       },
     ],
   },

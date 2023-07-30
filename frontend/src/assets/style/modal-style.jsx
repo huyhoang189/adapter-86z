@@ -53,7 +53,8 @@ const ModalWrapper = styled(Modal)`
   .ant-picker,
   .ant-input-number,
   .ant-select,
-  .ant-select-selector {
+  .ant-select-selector,
+  .ant-select-dropdown {
     border-radius: 0px;
   }
 `;
