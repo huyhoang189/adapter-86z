@@ -2,7 +2,7 @@ const categoryModel = require("../models/category.model");
 
 class CategoryService {
   // Get all categories that are active and match the keyword (case-insensitive search).
-  // Paginate the results based on the given offset and limit.
+
   getAll = async (keyword = "", offset, limit) => {
     // Create a query object to find active categories with a case-insensitive search for name or sign.
     const query = {

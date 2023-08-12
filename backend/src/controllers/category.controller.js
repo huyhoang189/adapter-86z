@@ -47,7 +47,13 @@ class CategoryController {
       metadata: simplifyData(fields, category),
     }).send(res);
   };
-
+  /**
+   *
+   * @param {*} req
+   * @param {*} res
+   * @param {*} next
+   * @returns
+   */
   create = async (req, res, next) => {
     const { name, description } = req.body;
     console.log("s", description);
