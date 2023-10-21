@@ -1,4 +1,5 @@
 import {
+  Button,
   Image,
   Layout,
   Menu,
@@ -8,42 +9,50 @@ import {
   Typography,
   theme,
 } from "antd";
-import userLogo from "../../assets/user_1.png";
+import userLogo from "../../../assets/user_1.png";
 import { useNavigate } from "react-router-dom";
+import {
+  AlignLeftOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+} from "@ant-design/icons";
+import appSlice from "../../../toolkits/app/slice";
+import { useDispatch, useSelector } from "react-redux";
 const { Header } = Layout;
 
 const Navbar = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { collapsed } = useSelector((state) => state.app);
+
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-  const user = JSON.parse(localStorage.getItem('user')); 
+  const user = JSON.parse(localStorage.getItem("user"));
   return (
     <Header
       style={{
-        height: 50,
         width: "100%",
         position: "relative",
         backgroundColor: colorBgContainer,
+        paddingLeft: 0,
       }}
     >
-      {/* <Image
-        src={userLogo}
-        width={40}
-        height={40}
-        preview={false}
-        style={{ verticalAlign: "baseline", float: "right" }}
-      /> */}
-      <Row
-        style={{
-          display: "flex",
-          alignItems: "center",
-          height: 50,
-        }}
-      >
+      <Row style={{ display: "flex", justifyContent: "space-between" }}>
+        <Button
+          type="none"
+          icon={<AlignLeftOutlined />}
+          onClick={() => dispatch(appSlice.actions.collapsedSiderbar())}
+          style={{
+            width: 64,
+            height: 64,
+          }}
+        />
+
         <Popover
           content={
-            <Menu mode="inline" theme="light" style={{ width: 200, margin: 0 }}>
+            <Menu mode="inline" theme="light" style={{ margin: 0 }}>
               <Menu.Item>Quản trị tài khoản</Menu.Item>
               <Menu.Item
                 onClick={() => {
@@ -57,13 +66,10 @@ const Navbar = () => {
           }
           trigger="click"
         >
-          <Space
-            direction="horizontal"
-            style={{ marginLeft: "auto", height: 50 }}
-          >
+          <Space direction="horizontal">
             <Image width={30} height={30} preview={false} src={userLogo} />
             <Typography.Text style={{ color: "#000", fontWeight: "bold" }}>
-              {user.name}
+              {user?.name}
             </Typography.Text>
           </Space>
         </Popover>

@@ -50,15 +50,4 @@ export const LoginWrapper = styled("div")`
   .ant-upload-wrapper {
     margin: auto;
   }
-
-  .ant-btn {
-    font-size: 12px;
-    height: 32px;
-    border-radius: 0px;
-  }
-
-  .ant-input-password,
-  .ant-input {
-    border-radius: 0px;
-  }
 `;

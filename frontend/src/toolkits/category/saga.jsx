@@ -5,7 +5,7 @@ import {
   createCategory,
   updateCategory,
   deleteCategory,
-} from "../../services/categoryService";
+} from "../../services/category.service";
 import {
   MESSAGE_DEPARTMENT_DESCRIPTION,
   MESSAGE_DESCRIPTION,

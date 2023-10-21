@@ -6,14 +6,21 @@ const initialState = {
     _id: "",
     name: "",
     shortName: "",
-    parentId: "",
+    parent: "",
+    // parent: {
+    //   _id: null,
+    //   name: "",
+    // },
     level: 1,
   },
   selectedDepartment: {
     _id: "",
     name: "",
     shortName: "",
-    parentId: "",
+    // parent: {
+    //   _id: null,
+    //   name: "",
+    // },
     level: 1,
   },
   errorMassage: false,

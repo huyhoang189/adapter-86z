@@ -10,7 +10,6 @@ const ModalWrapper = styled(Modal)`
     box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
     pointer-events: auto;
     padding-bottom: 5px;
-    border-radius: 0;
   }
 
   .ant-modal-header {
@@ -43,19 +42,17 @@ const ModalWrapper = styled(Modal)`
     margin: auto;
   }
 
-  .ant-btn {
-    font-size: 12px;
-    height: 32px;
-    border-radius: 0px;
-  }
-
-  .ant-input,
-  .ant-picker,
-  .ant-input-number,
-  .ant-select,
-  .ant-select-selector,
-  .ant-select-dropdown {
-    border-radius: 0px;
+  .custom-html-page {
+    img {
+      width: 100%;
+      display: block;
+      position: relative;
+      max-height: 50%;
+    }
+    figcaption {
+      text-align: center;
+    }
   }
 `;
+
 export default ModalWrapper;

@@ -5,7 +5,7 @@ import {
   creatVariants,
   updateVariants,
   deleteVariants,
-} from "../../services/variantService";
+} from "../../services/variant.service";
 import {
   MESSAGE_DEPARTMENT_DESCRIPTION,
   MESSAGE_DESCRIPTION,

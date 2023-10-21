@@ -8,17 +8,21 @@ import {
   Table,
   Tooltip,
 } from "antd";
-import { departmentColumn, departmentDatasource } from "./column";
+import { departmentColumn } from "./column";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import departmentsSlice from "../../toolkits/department/slice";
 import * as icons from "react-icons/ai";
 import ModalItem from "./modal";
+import UpdateButton from "../../components/button/update.button";
+import DeleteButton from "../../components/button/delete.button";
+import CreateButton from "../../components/button/create.button";
+import { HANDLE_TYPE } from "../../commons/constant";
 
 const Departments = () => {
   const dispatch = useDispatch();
-  const { departments } = useSelector((state) => state.departments);
-
+  const { departments, department } = useSelector((state) => state.departments);
+  const [rowKey, setRowKey] = useState([]);
   const columns = [
     ...departmentColumn,
     {
@@ -26,53 +30,93 @@ const Departments = () => {
       key: "tool",
       align: "center",
       width: 140,
-      render: (text, row, index) => (
+      render: (text, record) => (
         <Space
           direction="horizontal"
           style={{ width: "100%", justifyContent: "center" }}
         >
-          <Tooltip title="Cập nhật dữ liệu">
-            <Button
-              className="yellow-button"
-              icon={<icons.AiFillEdit />}
-              type="none"
-              onClick={() => handleModal(row)}
-            />
-          </Tooltip>
-
-          <Popconfirm
-            title="Bạn có muốn xoá bản ghi không ?"
-            onConfirm={() =>
+          <CreateButton
+            onClick={() =>
+              handleModal({
+                ...department,
+                parent: {
+                  ...record,
+                },
+              })
+            }
+          />
+          <UpdateButton onClick={() => handleModal(record)} />
+          <DeleteButton
+            onClick={() =>
               dispatch(
                 departmentsSlice.actions.processingDepartment({
-                  item: row,
-                  actionName: "DELETE_ITEM",
+                  item: record,
+                  actionName: HANDLE_TYPE.DELETE_ITEM,
                 })
               )
             }
-            okText="Đồng ý"
-            cancelText="Không đồng ý"
-            placement="leftTop"
-          >
-            <Tooltip title="Xoá dữ liệu">
-              <Button shape="retangle" danger icon={<icons.AiFillDelete />} />
-            </Tooltip>
-          </Popconfirm>
+          />
         </Space>
       ),
     },
   ];
-  let dataSource = [];
-  departments.map((e, i) => {
-    dataSource.push({
-      ...e,
-      key: i + 1,
-    });
-  });
+
   //handle open modal
   const handleModal = (_item) => {
     dispatch(departmentsSlice.actions.toggleModal(_item));
   };
+
+  //function for create tree
+  const generateChildNodes = (arr, parentId, key) => {
+    let outputs = [];
+    let index = 1;
+
+    for (let element of arr) {
+      if (element.parent?._id === parentId) {
+        let newKey = key === "" ? `${index}` : `${key}.${index}`;
+        let children = generateChildNodes(arr, element._id, newKey);
+
+        let node = {
+          ...element,
+          key: newKey,
+        };
+
+        if (children) {
+          node.children = children;
+        }
+
+        outputs.push(node);
+        index++;
+      }
+    }
+    return outputs;
+  };
+
+  const generateTrees = (arr) => {
+    let trees = [];
+    let index = 1;
+    for (let element of arr) {
+      if (element.parent === null) {
+        let node = {
+          ...element,
+          key: index,
+          children: [],
+        };
+        trees.push(node);
+        index++;
+      }
+    }
+    trees.forEach((element, index) => {
+      let child = generateChildNodes(arr, element._id, element.key);
+      trees[index].children = [...child];
+    });
+    return trees;
+  };
+
+  let dataSource = [];
+  dataSource = generateTrees(departments);
+
+  //effect
   useEffect(() => {
     dispatch(departmentsSlice.actions.getDepartments());
   }, [dispatch]);
@@ -92,14 +136,11 @@ const Departments = () => {
             },
           ]}
         />
-        <Button
-          type="primary"
-          style={{ marginLeft: "auto", width: 100 }}
-          className="blue-button"
+        <CreateButton
           onClick={() => handleModal(null)}
-        >
-          Thêm mới
-        </Button>
+          style={{ marginLeft: "auto" }}
+          size="large"
+        />
         <ModalItem />
         <Divider style={{ margin: "10px" }}></Divider>
       </Row>
@@ -109,6 +150,7 @@ const Departments = () => {
           bordered
           dataSource={dataSource}
           columns={columns}
+          pagination={false}
         />
       </Row>
     </div>

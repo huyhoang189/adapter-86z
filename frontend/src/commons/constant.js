@@ -45,8 +45,8 @@ export const MESSAGE_OBJECTIVE_COMPANY_DESCRIPTION = {
   DELETE_ERROR: "Xóa mục tiêu không thành công",
   GET_SUCCESS: "Lấy dữ liệu thành công",
   GET_ERROR: "Không thể lấy dữ liệu",
-  REJECT_SUCCESS:"Từ chối mục tiêu thành công",
-  ACCEPT_SUCCESS:"Phê duyệt mục tiêu thành công"
+  REJECT_SUCCESS: "Từ chối mục tiêu thành công",
+  ACCEPT_SUCCESS: "Phê duyệt mục tiêu thành công",
 };
 export const MESSAGE_REVIEW_DESCRIPTION = {
   ADD_SUCCESS: "Thêm mục tiêu thành công",
@@ -57,7 +57,12 @@ export const MESSAGE_REVIEW_DESCRIPTION = {
   DELETE_ERROR: "Xóa mục tiêu không thành công",
   GET_SUCCESS: "Lấy dữ liệu thành công",
   GET_ERROR: "Không thể lấy dữ liệu",
-  REJECT_SUCCESS:"Từ chối mục tiêu thành công",
-  ACCEPT_SUCCESS:"Phê duyệt mục tiêu thành công"
+  REJECT_SUCCESS: "Từ chối mục tiêu thành công",
+  ACCEPT_SUCCESS: "Phê duyệt mục tiêu thành công",
 };
 
+export const HANDLE_TYPE = {
+  ADD_ITEM: "ADD_ITEM",
+  UPDATE_ITEM: "UPDATE_ITEM",
+  DELETE_ITEM: "DELETE_ITEM",
+};

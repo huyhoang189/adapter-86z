@@ -1,11 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
-import ModalWrapper from "../../assets/style/modal-style";
-import InputWrapper from "../../components/form/inputWrapper";
+import ModalWrapper from "../../assets/style/modal.style";
+import InputWrapper from "../../components/form/inputWrapper.form";
 import TextArea from "antd/es/input/TextArea";
-import { departmentDatasource } from "./column";
-import { Input, InputNumber, Select, DatePicker } from "antd";
+import { Input, InputNumber, Select, DatePicker, TreeSelect } from "antd";
 import { useEffect } from "react";
 import departmentSlice from "../../toolkits/department/slice";
+import { HANDLE_TYPE } from "../../commons/constant";
+import { generateTrees } from "../../utils";
 
 export default function ModalItem() {
   const dispatch = useDispatch();
@@ -25,8 +26,10 @@ export default function ModalItem() {
   //use for change selected component
   const onChangeSelectedRecord = (key, event) => {
     let record = Object.assign({}, selectedDepartment);
+
     if (key) {
-      record[key] = event;
+      let temp = departmentsRaw.find((e) => e._id === event);
+      record[key] = temp;
     }
     dispatch(departmentSlice.actions.updateSelectedDepartmentInput(record));
   };
@@ -54,6 +57,9 @@ export default function ModalItem() {
     }
   }, [modalActive]);
 
+  let treeData = [];
+  treeData = generateTrees(departmentsRaw);
+
   return (
     <ModalWrapper
       okText="Chấp nhận"
@@ -62,13 +68,12 @@ export default function ModalItem() {
       onCancel={() => handleModal(null)}
       open={modalActive}
       maskClosable={false}
-      title={
-        selectedDepartment?._id ? "Cập nhật phòng ban" : "Thêm mới phòng ban"
-      }
+      title={selectedDepartment?._id ? "Cập nhật đơn vị" : "Thêm mới đơn vị"}
       onOk={
         selectedDepartment._id
-          ? () => onProcessingRecord("UPDATE_ITEM", selectedDepartment)
-          : () => onProcessingRecord("ADD_ITEM", selectedDepartment)
+          ? () =>
+              onProcessingRecord(HANDLE_TYPE.UPDATE_ITEM, selectedDepartment)
+          : () => onProcessingRecord(HANDLE_TYPE.ADD_ITEM, selectedDepartment)
       }
     >
       <InputWrapper title="Tên đơn vị">
@@ -86,22 +91,45 @@ export default function ModalItem() {
           onChange={(e) => onChangeInputRecord("shortName", e)}
         />
       </InputWrapper>
+      <InputWrapper title="Cấp">
+        <Input
+          placeholder="Nhập cấp"
+          value={selectedDepartment?.level}
+          onChange={(e) => onChangeInputRecord("level", e)}
+        />
+      </InputWrapper>
       <InputWrapper title="Phòng cấp trên">
-        <Select
+        {/* <Select
           placeholder="Chọn phòng"
           showSearch
           style={{ width: "100%" }}
           filterOption={(input, option) =>
             (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
           }
-          options={departmentsRaw.map((e, i) => {
-            return {
-              value: e._id,
-              label: e.name,
-            };
-          })}
-          value={selectedDepartment?.parentId}
-          onChange={(e) => onChangeSelectedRecord("parentId", e)}
+          options={[
+            {
+              value: null,
+              label: "Không có đơn vị cha",
+            },
+            ...departmentsRaw.map((e, i) => {
+              return {
+                value: e._id,
+                label: `${e.name} - ${e?.parent?.shortName || "BQP"}`,
+              };
+            }),
+          ]}
+          value={selectedDepartment?.parent?._id}
+          onChange={(e) => onChangeSelectedRecord("parent", e)}
+        /> */}
+
+        <TreeSelect
+          treeLine={true}
+          style={{
+            width: "100%",
+          }}
+          treeData={treeData}
+          value={selectedDepartment?.parent?._id}
+          onChange={(e) => onChangeSelectedRecord("parent", e)}
         />
       </InputWrapper>
     </ModalWrapper>

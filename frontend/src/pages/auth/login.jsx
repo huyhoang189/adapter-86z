@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Layout, Form, Input, Row, Col, Button, Image } from "antd";
 import { useDispatch } from "react-redux";
-import { LoginWrapper } from "../../assets/style/login-style";
+import { LoginWrapper } from "../../assets/style/login.style";
 import Logo from "../../assets/logo.png";
 import axios from "axios";
 import { notification } from "antd";

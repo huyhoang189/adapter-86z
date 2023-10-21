@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
-import ModalWrapper from "../../assets/style/modal-style";
-import InputWrapper from "../../components/form/inputWrapper";
+import ModalWrapper from "../../assets/style/modal.style";
+import InputWrapper from "../../components/form/inputWrapper.form";
 import { Input, InputNumber, Select, DatePicker } from "antd";
 import { useEffect } from "react";
 import categorySlice from "../../toolkits/category/slice";

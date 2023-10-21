@@ -12,24 +12,37 @@ class DepartmentService {
         { name: { $regex: keyword, $options: "i" } }, // Case-insensitive regex search for name
         { shortName: { $regex: keyword, $options: "i" } }, // Case-insensitive regex search for shortName
       ],
+      // select: "_id ",
     };
 
     // Find departments based on the query, limit, and offset.
     const departments = await departmentModel
       .find(query)
+      .populate({
+        path: "parent",
+        strictPopulate: false,
+        select: "_id name shortName code level",
+      })
+      .select("_id name shortName code level parent updatedAt")
       .limit(limit)
       .skip(offset);
 
     // Get the total count of active departments that match the query (without pagination).
     const total = await departmentModel.countDocuments(query);
 
-    return { departments: await addParentName(departments), total };
+    return { departments, total };
   };
 
   // Get all departments (without any filtering or pagination).
   getAllRaw = async () => {
     // Find all departments without any query or filters.
-    const departments = await departmentModel.find({});
+    const departments = await departmentModel
+      .find({ status: "active" })
+      .populate({
+        path: "parent",
+        strictPopulate: false,
+        select: "_id name shortName code level",
+      });
 
     // Get the total count of all departments.
     const total = await departmentModel.countDocuments({});
@@ -54,13 +67,13 @@ class DepartmentService {
   };
 
   // Create a new department with the provided information.
-  create = async (name, shortName, code, parentId, level) => {
+  create = async (name, shortName, code, parent, level) => {
     return await departmentModel.create({
       name,
       shortName,
       code,
-      parentId: parentId ? parentId : null,
-      level: level ? level : 1,
+      parent: parent || null,
+      level: level || 1,
       status: "active",
     });
   };
@@ -85,17 +98,3 @@ class DepartmentService {
 }
 
 module.exports = DepartmentService;
-
-const addParentName = async (departments) => {
-  const data = await Promise.all(
-    departments.map(async (e, i) => {
-      const temp = await departmentModel.findById(e.parentId);
-      return {
-        ...e._doc,
-        parentName: temp?.name || "",
-      };
-    })
-  );
-
-  return data;
-};

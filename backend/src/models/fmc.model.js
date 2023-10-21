@@ -1,16 +1,14 @@
 const mongoose = require("mongoose"); // Erase if already required
 
-const DOCUMENT_NAME = "department";
-const COLLECTION_NAME = "Departments";
+const DOCUMENT_NAME = "fmc";
+const COLLECTION_NAME = "Fmcs";
 
 // Declare the Schema of the Mongo model
 var schema = new mongoose.Schema(
   {
-    name: { type: String, required: true, trim: true },
-    shortName: { type: String, required: true, trim: true },
-    code: { type: String, trim: true },
-    level: { type: Number, trim: true, default: 1 },
-    parent: {
+    name: { type: String, trim: true },
+    description: { type: String, trim: true },
+    department: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "department",
     },

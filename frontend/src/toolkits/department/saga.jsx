@@ -6,8 +6,9 @@ import {
   updateDepartments,
   deleteDepartments,
   getDepartmentRaw,
-} from "../../services/departmentService";
+} from "../../services/department.service";
 import {
+  HANDLE_TYPE,
   MESSAGE_DEPARTMENT_DESCRIPTION,
   MESSAGE_DESCRIPTION,
 } from "../../commons/constant";
@@ -15,10 +16,7 @@ import { notification } from "antd";
 function* _getDepartments({ payload }) {
   try {
     const response = yield call(getDepartments, payload);
-    // console.log(response);
     if (response.metadata.data.length >= 0) {
-      // const list = response.list;
-      // console.log(response);
       yield put(
         departmentSlice.actions.getDepartmentsSuccess(response.metadata.data)
       );
@@ -43,23 +41,22 @@ function* _getRaw({ payload }) {
 }
 function* _processingDepartment({ payload }) {
   try {
-    let { actionName, item } = payload;
-    console.log(actionName, item);
-    if (actionName === "ADD_ITEM") {
+    let { actionName } = payload;
+    if (actionName === HANDLE_TYPE.ADD_ITEM) {
       const response = yield call(creatDepartments, payload);
       if (response) {
         notification.success({
           message: MESSAGE_DEPARTMENT_DESCRIPTION.ADD_SUCCESS,
         });
       }
-    } else if (actionName === "UPDATE_ITEM") {
+    } else if (actionName === HANDLE_TYPE.UPDATE_ITEM) {
       const response = yield call(updateDepartments, payload);
       if (response) {
         notification.success({
           message: MESSAGE_DEPARTMENT_DESCRIPTION.UPDATE_SUCCESS,
         });
       }
-    } else if (actionName === "DELETE_ITEM") {
+    } else if (actionName === HANDLE_TYPE.DELETE_ITEM) {
       const response = yield call(deleteDepartments, payload);
       if (response) {
         notification.success({

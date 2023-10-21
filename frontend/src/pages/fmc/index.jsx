@@ -1,21 +1,19 @@
-import { Breadcrumb, Button, Divider, Row, Space, Table, Tooltip } from "antd";
-import { malwareColumn } from "./column";
+import { Breadcrumb, Divider, Row, Space, Table } from "antd";
+import { fmcColumn } from "./column";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import malwaresSlice from "../../toolkits/malware/slice";
-import * as icons from "react-icons/ai";
+import fmcSlice from "../../toolkits/fmc/slice";
 import ModalItem from "./modal";
-import DeleteButton from "../../components/button/delete.button";
 import UpdateButton from "../../components/button/update.button";
+import DeleteButton from "../../components/button/delete.button";
 import CreateButton from "../../components/button/create.button";
-import DetailButton from "../../components/button/detail.button";
+import { HANDLE_TYPE } from "../../commons/constant";
 
-const Malwares = () => {
+const Fmcs = () => {
   const dispatch = useDispatch();
-  const { malwares } = useSelector((state) => state.malwares);
-
+  const { fmcs, total, page, limit } = useSelector((state) => state.fmcs);
   const columns = [
-    ...malwareColumn,
+    ...fmcColumn,
     {
       title: "Công cụ",
       key: "tool",
@@ -26,18 +24,13 @@ const Malwares = () => {
           direction="horizontal"
           style={{ width: "100%", justifyContent: "center" }}
         >
-          <DetailButton
-            onClick={() =>
-              (window.location.pathname = `/admin/malwares/${record._id}`)
-            }
-          />
           <UpdateButton onClick={() => handleModal(record)} />
           <DeleteButton
             onClick={() =>
               dispatch(
-                malwaresSlice.actions.processingMalware({
+                fmcSlice.actions.processingFmc({
                   item: record,
-                  actionName: "DELETE_ITEM",
+                  actionName: HANDLE_TYPE.DELETE_ITEM,
                 })
               )
             }
@@ -46,19 +39,36 @@ const Malwares = () => {
       ),
     },
   ];
+
+  //handle open modal
+  const handleModal = (_item) => {
+    dispatch(fmcSlice.actions.toggleModal(_item));
+  };
+  const handlePaginationChange = (current, pageSize) => {
+    dispatch(
+      fmcSlice.actions.getFmcs({
+        limit: pageSize,
+        page: current,
+      })
+    );
+  };
+
   let dataSource = [];
-  malwares.map((e, i) => {
+  fmcs.map((e, i) => {
     dataSource.push({
       ...e,
       key: i + 1,
     });
   });
-  //handle open modal
-  const handleModal = (_item) => {
-    dispatch(malwaresSlice.actions.toggleModal(_item));
-  };
+
+  //effect
   useEffect(() => {
-    dispatch(malwaresSlice.actions.getMalwares());
+    dispatch(
+      fmcSlice.actions.getFmcs({
+        page,
+        limit,
+      })
+    );
   }, [dispatch]);
   return (
     <div>
@@ -70,16 +80,15 @@ const Malwares = () => {
               title: "Chung",
             },
             {
-              title: <span style={{ fontWeight: "bold" }}>Mã độc</span>,
+              title: <span style={{ fontWeight: "bold" }}>Quản lý FMC</span>,
             },
           ]}
         />
-
         <CreateButton
           onClick={() => handleModal(null)}
           style={{ marginLeft: "auto" }}
+          size="large"
         />
-
         <ModalItem />
         <Divider style={{ margin: "10px" }}></Divider>
       </Row>
@@ -89,10 +98,16 @@ const Malwares = () => {
           bordered
           dataSource={dataSource}
           columns={columns}
+          pagination={{
+            current: page,
+            pageSize: limit,
+            total: total,
+            onChange: handlePaginationChange,
+          }}
         />
       </Row>
     </div>
   );
 };
 
-export default Malwares;
+export default Fmcs;

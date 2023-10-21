@@ -15,11 +15,12 @@ const pagination = (req, res, next) => {
 
   // Validate limit parameter
   const limitNumber = parseInt(limit, 10) || 10;
-  if (limitNumber < 1 || limitNumber > 100) {
-    throw new ForbiddenError(
-      "Invalid limit value. Limit must be between 1 and 100."
-    );
-  }
+  // console.log(limit);
+  // if (limitNumber > 1 || limitNumber <= 1000) {
+  //   throw new ForbiddenError(
+  //     "Invalid limit value. Limit must be between 1 and 100."
+  //   );
+  // }
 
   req.pagination = {
     limit: parseInt(limit || 10),

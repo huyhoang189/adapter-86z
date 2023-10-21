@@ -8,8 +8,6 @@ const simplifyData = require("../utils/simplifyData");
 
 const departmentService = new DepartmentService();
 
-const fields = ["_id", "name", "shortName", "parentId", "level", "parentName"];
-
 class DepartmentController {
   getAll = async (req, res, next) => {
     const { offset, limit } = req.pagination;
@@ -26,7 +24,8 @@ class DepartmentController {
     return new Succeed({
       message: "Get departments success",
       metadata: {
-        data: simplifyData(fields, departments),
+        // data: simplifyData(fields, departments),
+        data: departments,
         limit,
         page: offset / limit + 1,
         total,
@@ -42,7 +41,7 @@ class DepartmentController {
     return new Succeed({
       message: "Get departments success",
       metadata: {
-        data: simplifyData([...fields, "status"], departments),
+        data: departments,
         total,
       },
     }).send(res);
@@ -58,12 +57,12 @@ class DepartmentController {
     //return value
     return new Succeed({
       message: "Get by Id",
-      metadata: simplifyData(fields, department),
+      metadata: department,
     }).send(res);
   };
 
   create = async (req, res, next) => {
-    const { name, shortName, code, parentId, level } = req.body;
+    const { name, shortName, code, parent, level } = req.body;
 
     const holderDepartment = await departmentService.validateName(
       name,
@@ -78,7 +77,7 @@ class DepartmentController {
       name,
       shortName,
       code,
-      parentId,
+      parent,
       level
     );
     if (!department) throw new ForbiddenError("Cannot create department");
@@ -86,7 +85,7 @@ class DepartmentController {
     //return value
     return new Created({
       message: "Create department success",
-      metadata: simplifyData(fields, department),
+      metadata: department,
     }).send(res);
   };
 
@@ -100,7 +99,7 @@ class DepartmentController {
     //return value
     return new Succeed({
       message: "Update department success",
-      metadata: simplifyData(fields, department),
+      metadata: department,
     }).send(res);
   };
 
@@ -112,7 +111,7 @@ class DepartmentController {
     //return value
     return new Succeed({
       message: "delete success department",
-      metadata: simplifyData(fields, department),
+      metadata: department,
     }).send(res);
   };
 }
