@@ -15,7 +15,6 @@ export const departmentColumn = [
     key: "name",
     align: "center",
     width: 350,
-
     render: (text, record) => {
       return <p style={{ textAlign: "left" }}>{record?.name}</p>;
     },
